@@ -1,16 +1,22 @@
-# container-tests
-trying to build customer codespaces environment
+# devcontainer Tests
 
-## Collapsible Summary
+Testing devcontainer configurations.
 
-Trying collapsibe summary in GH markdown filee
+## Cloud Development Environment
 
-<details>
-	<summary>Click to expand this section!</summary>
-	
-I'm a summary that was hidden
+### Requirements
 
-```
-echo "yay!!"
-```
-</details>
+devcontainer/codespace configurations required for developing cloud dev applications.
+
+- dontnet
+- python
+- ms sql
+- sqlite
+
+### Experiments with Base Images
+
+- Universal
+- Ubuntu
+- dotnet
+- pre-build
+
