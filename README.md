@@ -8,7 +8,7 @@ Testing devcontainer configurations.
 
 devcontainer/codespace configurations required for developing cloud dev applications.
 
-- dontnet
+- dotnet
 - python
 - ms sql
 - sqlite
