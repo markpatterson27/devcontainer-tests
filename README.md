@@ -12,11 +12,14 @@ devcontainer/codespace configurations required for developing cloud dev applicat
 - python
 - ms sql
 - sqlite
+- docker in docker
+- az cli
 
 ### Experiments with Base Images
 
 - Universal
 - Ubuntu
+- Debian
 - dotnet
 - pre-build
 
