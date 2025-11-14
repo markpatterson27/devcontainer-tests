@@ -1,0 +1,6 @@
+{
+    "name": "SQLTools",
+    "id": "sqltools",
+    "version": "1.0.0",
+    "description": "Installs the SQLTools CLI"
+}
