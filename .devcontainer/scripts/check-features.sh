@@ -106,7 +106,7 @@ check_sqlcmd() {
 
     # Try a lightweight server query if possible; do not fail the script on error
     local server_info
-    server_info=$(sqlcmd -S "$DB_HOST" -U SA -P "$SA_PASSWORD" -Q "SET NOCOUNT ON; SELECT @@VERSION;" -W -h-1 2>/dev/null || true)
+    server_info=$(sqlcmd -S "$DB_HOST" -U SA -P "$SA_PASSWORD" -C -Q "SET NOCOUNT ON; SELECT @@VERSION;" -W -h-1 2>/dev/null || true)
     if [[ -n "$server_info" ]]; then
       print_ok "Connected to '$DB_HOST' and retrieved server version:"
       echo "$server_info" | sed 's/^/   /'
