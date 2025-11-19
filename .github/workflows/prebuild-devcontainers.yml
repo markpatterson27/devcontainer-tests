@@ -1,0 +1,49 @@
+name: Prebuild DevContainers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/prebuild-devcontainers.yml'
+  pull_request:
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/prebuild-devcontainers.yml'
+  schedule:
+    # Weekly rebuild on Sundays at 00:00 UTC to keep images up-to-date
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  prebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        devcontainer:
+          - Debian
+          - dotnet
+          - Ubuntu
+          - Universal
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pre-build dev container image
+        uses: devcontainers/ci@v0.3
+        with:
+          subFolder: .devcontainer/${{ matrix.devcontainer }}
+          imageName: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
+          cacheFrom: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
+          push: ${{ github.event_name != 'pull_request' }}
