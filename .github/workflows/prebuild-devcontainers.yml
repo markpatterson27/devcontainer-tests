@@ -43,7 +43,7 @@ jobs:
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.3
         with:
-          subFolder: .devcontainer/${{ matrix.devcontainer }}
+          configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           imageName: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
           cacheFrom: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
           push: ${{ github.event_name != 'pull_request' }}
