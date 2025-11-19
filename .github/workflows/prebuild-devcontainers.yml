@@ -46,4 +46,5 @@ jobs:
           configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           imageName: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
           cacheFrom: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: filter
+          eventFilterForPush: push
