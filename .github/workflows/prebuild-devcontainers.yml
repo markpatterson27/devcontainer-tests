@@ -28,7 +28,7 @@ jobs:
           - Debian
           - dotnet
           - Ubuntu
-        #   - Universal
+          - Universal
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
