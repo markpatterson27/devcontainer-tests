@@ -50,7 +50,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
-          imageName: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
-          cacheFrom: ghcr.io/${{ github.repository }}/devcontainer-${{ matrix.devcontainer }}
+          imageName: ghcr.io/${{ steps.lowercase.outputs.repository }}/devcontainer-${{ steps.lowercase.outputs.devcontainer }}
+          cacheFrom: ghcr.io/${{ steps.lowercase.outputs.repository }}/devcontainer-${{ steps.lowercase.outputs.devcontainer }}
           push: filter
           eventFilterForPush: push
