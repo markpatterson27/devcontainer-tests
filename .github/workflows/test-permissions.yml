@@ -10,5 +10,11 @@ jobs:
   test-codespace-permissions:
     runs-on: ubuntu-latest
     steps:
+      - name: Authenticate gh CLI with GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token -s codespace
+
       - name: Check GH CLI codespace permissions
         run: gh codespace list
