@@ -18,3 +18,12 @@ jobs:
 
       - name: Check GH CLI codespace permissions
         run: gh codespace list
+
+      - name: Create codespace (test)
+        env:
+          GITHUB_REPO: markpatterson27/devcontainer-tests
+        run: |
+          gh codespace create --repo $GITHUB_REPO --machine standardLinux --devcontainer-path .devcontainer/Ubuntu
+
+      - name: List codespaces after creation
+        run: gh codespace list
