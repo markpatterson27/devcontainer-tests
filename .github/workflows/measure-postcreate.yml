@@ -1,0 +1,93 @@
+name: Measure Codespace postCreate completion
+
+# Runs manually or on a schedule. Adjust cron as needed.
+on:
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: 'Number of iterations'
+        required: false
+        default: '3'
+      machine:
+        description: 'Codespace machine type (optional)'
+        required: false
+        default: ''
+      devcontainer_path:
+        description: 'Devcontainer path (optional)'
+        required: false
+        default: ''
+#   schedule:
+#     # hourly by default — change to suit your needs
+#     - cron: '0 * * * *'
+
+permissions:
+  contents: read
+  codespaces: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (gh, jq)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+          if ! command -v gh >/dev/null 2>&1; then
+            curl -fsSL "https://github.com/cli/cli/releases/latest/download/gh_$(uname -s)_amd64.tar.gz" -o gh.tar.gz
+            tar -xzf gh.tar.gz
+            sudo mv gh_*/*/bin/gh /usr/local/bin/gh || sudo mv gh_*/*/bin/gh /usr/bin/gh || true
+          fi
+          gh --version
+
+      - name: Authenticate gh CLI with GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
+
+      - name: Ensure measure script is executable
+        run: chmod +x ./scripts/measure-postcreate.sh
+
+      - name: Run measurement script and save raw log
+        id: run_measure
+        env:
+          # repository to test (use this repo by default; override if desired)
+          GITHUB_REPO: markpatterson27/devcontainer-tests
+          # inputs from workflow_dispatch
+          ITERATIONS: ${{ github.event.inputs.iterations }}
+          CODESPACE_MACHINE: ${{ github.event.inputs.machine }}
+          DEVCONTAINER_PATH: ${{ github.event.inputs.devcontainer_path }}
+        run: |
+          mkdir -p artifacts
+          # Run the script and tee output to a log
+          ./scripts/measure-postcreate.sh --repo "$GITHUB_REPO" --iterations "$ITERATIONS" \
+            ${CODESPACE_MACHINE:+--machine "$CODESPACE_MACHINE"} \
+            ${DEVCONTAINER_PATH:+--devcontainer-path "$DEVCONTAINER_PATH"} \
+            2>&1 | tee artifacts/measure.log
+
+          # Build a CSV from the script's iteration lines.
+          # Expected line format from the script:
+          # Iteration 1: 12345 ms (sentinel='12345')
+          echo "run_id,repo,iteration,duration_ms,sentinel" > artifacts/measure.csv
+          grep -E '^Iteration [0-9]+:' artifacts/measure.log || true
+          while IFS= read -r line; do
+            # extract iteration number
+            iter=$(echo "$line" | sed -E 's/^Iteration ([0-9]+):.*$/\1/')
+            # extract duration (numeric or -1)
+            dur=$(echo "$line" | sed -E 's/^Iteration [0-9]+: *([0-9-]+) ms.*$/\1/')
+            if [[ -z "$dur" ]]; then dur="-1"; fi
+            # extract sentinel value (inside single quotes)
+            sentinel=$(echo "$line" | sed -n "s/.*sentinel='\(.*\)'.*/\1/p" || true)
+            # sanitize commas/quotes in sentinel
+            sentinel_esc=$(echo "$sentinel" | sed 's/"/""/g')
+            echo "${{ github.run_id }},${GITHUB_REPO},${iter},${dur},\"${sentinel_esc}\"" >> artifacts/measure.csv
+          done < <(grep -E '^Iteration [0-9]+:' artifacts/measure.log || true)
+
+      - name: Upload artifacts (logs + CSV)
+        uses: actions/upload-artifact@v4
+        with:
+          name: codespace-measurements-${{ github.run_id }}
+          path: artifacts
