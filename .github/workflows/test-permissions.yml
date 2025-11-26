@@ -1,0 +1,14 @@
+name: codespace permissions test
+
+on:
+  workflow_dispatch:
+
+# permissions:
+#     codespaces: write
+
+jobs:
+  test-codespace-permissions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check GH CLI codespace permissions
+        run: gh codespace list
