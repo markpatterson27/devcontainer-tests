@@ -14,7 +14,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "${GITHUB_TOKEN}" | gh auth login --with-token -s codespace
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
 
       - name: Check GH CLI codespace permissions
         run: gh codespace list
