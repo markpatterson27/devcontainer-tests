@@ -12,9 +12,9 @@ jobs:
     steps:
       - name: Authenticate gh CLI with GITHUB_TOKEN
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODESPACES_GITHUB_TOKEN: ${{ secrets.CODESPACES_GH_TOKEN }}
         run: |
-          echo "${GITHUB_TOKEN}" | gh auth login --with-token
+          echo "${CODESPACES_GITHUB_TOKEN}" | gh auth login --with-token
 
       - name: Check GH CLI codespace permissions
         run: gh codespace list
