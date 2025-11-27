@@ -36,7 +36,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": ".devcontainer/scripts/check-features.sh",
+	"postCreateCommand": ".devcontainer/scripts/check-features.sh && .devcontainer/scripts/write-timestamp.sh",
 
 	// Configure tool-specific properties.
 	"customizations": {
