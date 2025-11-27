@@ -19,11 +19,20 @@ jobs:
       - name: Check GH CLI codespace permissions
         run: gh codespace list
 
-      - name: Create codespace (test)
+      # - name: Create codespace (test)
+      #   env:
+      #     GITHUB_REPO: markpatterson27/devcontainer-tests
+      #   run: |
+      #     gh codespace create --repo $GITHUB_REPO --machine standardLinux32gb --devcontainer-path .devcontainer/Ubuntu/devcontainer.json
+
+      # - name: List codespaces after creation
+      #   run: gh codespace list
+
+      - name: Run Codespace Measure
         env:
           GITHUB_REPO: markpatterson27/devcontainer-tests
+          DEVCONTAINER_PATH: .devcontainer/Ubuntu/devcontainer.json
+          CODESPACE_MACHINE: standardLinux32gb
+          ITERATIONS: 5
         run: |
-          gh codespace create --repo $GITHUB_REPO --machine standardLinux32gb --devcontainer-path .devcontainer/Ubuntu/devcontainer.json
-
-      - name: List codespaces after creation
-        run: gh codespace list
+          ./github/scripts/measure-codespace.sh
