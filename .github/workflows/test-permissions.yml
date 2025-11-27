@@ -42,4 +42,4 @@ jobs:
           CODESPACE_MACHINE: standardLinux32gb
           ITERATIONS: 5
         run: |
-          ./github/scripts/measure-codespace.sh
+          ./.github/scripts/measure-codespace.sh
