@@ -41,8 +41,9 @@
 	"portsAttributes": {
 		"8080": {
 			"label": "postCreate timestamp",
-			"onAutoForward": "openBrowser",
-			"visibility": "public"
+			"onAutoForward": "ignore",
+			"protocol": "http"
+			// "visibility": "public"
 		}
 	},
 
