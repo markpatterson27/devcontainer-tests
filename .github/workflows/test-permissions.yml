@@ -2,6 +2,10 @@ name: codespace permissions test
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/scripts/measure-codespace.sh'
+      - '.github/workflows/test-permissions.yml'
 
 # permissions:
 #     codespaces: write
