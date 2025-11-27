@@ -14,6 +14,9 @@ jobs:
   test-codespace-permissions:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Authenticate gh CLI with GITHUB_TOKEN
         env:
           CODESPACES_GITHUB_TOKEN: ${{ secrets.CODESPACES_GH_TOKEN }}
