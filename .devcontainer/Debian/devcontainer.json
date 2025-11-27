@@ -48,7 +48,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": ".devcontainer/scripts/check-features.sh && .devcontainer/scripts/write-timestamp.sh",
-	"postStartCommand": "python3 -m http.server 8080 --bind 0.0.0.0 --directory /workspaces/${GITHUB_REPOSITORY##*/} &>/tmp/postcreate-server.log &",
+	"postStartCommand": "python3 -m http.server 8080 --bind 0.0.0.0 --directory /workspaces/${GITHUB_REPOSITORY##*/} &> /tmp/postcreate-server.log &",
 
 	// Configure tool-specific properties.
 	"customizations": {
