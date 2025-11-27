@@ -13,6 +13,24 @@ on:
 jobs:
   test-codespace-permissions:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        devcontainer:
+          - Debian
+          - Debian-prebuilt
+          # - dotnet
+          # - dotnet-prebuilt
+          # - Ubuntu
+          # - Ubuntu-prebuilt
+          # - Universal
+          # - Universal-prebuilt
+        machine-type:
+          - basicLinux32gb
+          - standardLinux32gb
+          # - premiumLinux
+          # - largePremiumLinux
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -38,8 +56,8 @@ jobs:
       - name: Run Codespace Measure
         env:
           GITHUB_REPO: markpatterson27/devcontainer-tests
-          DEVCONTAINER_PATH: .devcontainer/Ubuntu/devcontainer.json
-          CODESPACE_MACHINE: standardLinux32gb
+          DEVCONTAINER_PATH: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
+          CODESPACE_MACHINE: ${{ matrix.machine-type }}
           ITERATIONS: 5
         run: |
           ./.github/scripts/measure-codespace.sh
