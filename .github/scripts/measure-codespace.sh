@@ -21,6 +21,10 @@ if [[ -z "$DEVCONTAINER_PATH" ]]; then
   echo "DEVCONTAINER_PATH is not set"
   exit 1
 fi
+if [[ ! -f "$DEVCONTAINER_PATH" ]]; then
+  echo "DEVCONTAINER_PATH '$DEVCONTAINER_PATH' does not exist"
+  exit 1
+fi
 
 
 echo "Measure Codespace with following parameters:
