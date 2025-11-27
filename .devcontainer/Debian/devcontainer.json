@@ -42,8 +42,8 @@
 		"8080": {
 			"label": "postCreate timestamp",
 			"onAutoForward": "ignore",
-			"protocol": "http"
-			// "visibility": "public"
+			// "protocol": "http"
+			"visibility": "public"
 		}
 	},
 
