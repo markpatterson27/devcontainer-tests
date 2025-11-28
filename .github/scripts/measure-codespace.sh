@@ -74,7 +74,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   # measure provisioning time: state available
   timeout_time=$(( $(date +%s) + TIMEOUT_SEC )) # timeout: now + TIMEOUT_SEC
   found=false
-  while [[ $(date +%s) -lt $TIMEOUT_TIME ]]; do
+  while [[ $(date +%s) -lt $timeout_time ]]; do
     sleep "$POLL_INTERVAL_SEC"
     status=$(gh codespace view -c "$CODESPACE_NAME" --json state --jq ".state")
     if [[ "$status" == "Available" ]]; then
