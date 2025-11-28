@@ -49,8 +49,8 @@ for (( i=1; i<=ITERATIONS; i++ )); do
 
   # create branch for this iteration
   ITER_BRANCH="codespace-measure-${DEVCONTAINER_NAME}-iter${i}"
-  git checkout -b "$ITER_BRANCH"
-  git push -u origin "$ITER_BRANCH"
+  git checkout -b "$ITER_BRANCH" > /dev/null
+  git push -u origin "$ITER_BRANCH" > /dev/null
   echo "Created and switched to branch $ITER_BRANCH"
 
   # creation timestamp
