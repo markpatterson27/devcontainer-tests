@@ -27,7 +27,7 @@ jobs:
           # - Universal-prebuilt
         machine-type:
           - basicLinux32gb
-          - standardLinux32gb
+          # - standardLinux32gb
           # - premiumLinux
           # - largePremiumLinux
     
@@ -58,6 +58,6 @@ jobs:
           GITHUB_REPO: markpatterson27/devcontainer-tests
           DEVCONTAINER_PATH: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           CODESPACE_MACHINE: ${{ matrix.machine-type }}
-          ITERATIONS: 5
+          ITERATIONS: 1
         run: |
           ./.github/scripts/measure-codespace.sh
