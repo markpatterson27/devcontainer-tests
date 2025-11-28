@@ -37,15 +37,15 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8080],
-	"portsAttributes": {
-		"8080": {
-			"label": "postCreate timestamp",
-			"onAutoForward": "ignore",
-			"protocol": "http"
-			// "visibility": "public"
-		}
-	},
+	// "forwardPorts": [8080],
+	// "portsAttributes": {
+	// 	"8080": {
+	// 		"label": "postCreate timestamp",
+	// 		"onAutoForward": "ignore",
+	// 		"protocol": "http"
+	// 		// "visibility": "public"
+	// 	}
+	// },
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": ".devcontainer/scripts/check-features.sh && .devcontainer/scripts/write-timestamp.sh",
