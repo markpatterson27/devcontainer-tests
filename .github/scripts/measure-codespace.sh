@@ -59,13 +59,15 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   echo "Codespace creation started at ${create_iso} (${create_ts_ms} ms)"
 
   # create codespace (non-blocking)
+  cs_cmd=(gh codespace create --repo "$REPO" --machine "$MACHINE" --devcontainer-path "$DEVCONTAINER_PATH" --branch "$ITER_BRANCH" --default-permissions)
+  echo "Running: ${cs_cmd[*]}"
   set +e
-  CODESPACE_NAME=$(gh codespace create --repo "$REPO" --machine "$MACHINE" --devcontainer-path "$DEVCONTAINER_PATH" --branch "$ITER_BRANCH" --default-permissions 2>/dev/null)
+  CODESPACE_NAME=$("${cs_cmd[@]}" 2>/dev/null)
   ret=$?
   set -e
   if [[ $ret -ne 0 || -z "$CODESPACE_NAME" ]]; then
     echo "Failed to create codespace. (gh codespace create exited with code $ret)"
-    exit 1
+    break
   fi
   echo "Codespace '$CODESPACE_NAME' creation initiated."
 
@@ -125,6 +127,12 @@ for (( i=1; i<=ITERATIONS; i++ )); do
 done
 echo "=== Finished all iterations ==="
 echo ""
+
+# if all iterations failed exit with error
+if [[ ${#results[@]} -eq 0 ]]; then
+  echo "All iterations failed."
+  exit 1
+fi
 
 # print results
 echo "Results:"
