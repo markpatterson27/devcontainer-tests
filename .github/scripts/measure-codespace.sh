@@ -69,7 +69,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
     echo "Failed to create codespace. (gh codespace create exited with code $ret)"
     break
   fi
-  echo "Codespace '$CODESPACE_NAME' creation initiated."
+  echo "** Codespace '$CODESPACE_NAME' creation initiated."
 
   # measure provisioning time: state available
   timeout_time=$(( $(date +%s) + TIMEOUT_SEC )) # timeout: now + TIMEOUT_SEC
