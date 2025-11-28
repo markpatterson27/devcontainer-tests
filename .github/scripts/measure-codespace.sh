@@ -94,7 +94,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
     echo "Current status: $status. Elapsed time: $(( $(date +%s) - ${create_ts_ms%.*} ))s. Checking again in ${POLL_INTERVAL_SEC}s..."
   done
 
-  if [[ $(date +%s) -ge $TIMEOUT_TIME ]]; then
+  if [[ $(date +%s) -ge $timeout_time ]]; then
     echo "Timeout waiting for codespace to be Available after ${TIMEOUT_SEC}s"
   fi
 
