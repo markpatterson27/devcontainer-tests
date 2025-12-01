@@ -38,10 +38,17 @@ echo "Measure Codespace with following parameters:
   Iterations: $ITERATIONS
   Machine: $MACHINE
   Devcontainer Path: $DEVCONTAINER_PATH
+  Results File: $RESULTS_FILE_PATH
 "
 
 # get devcontainer name from path: .devcontainer/<name>/devcontainer.json
 DEVCONTAINER_NAME=$(basename $(dirname "$DEVCONTAINER_PATH"))
+
+# initialize CSV file with headers if it doesn't exist
+if [[ ! -f "$RESULTS_FILE_PATH" ]]; then
+  echo "Iteration,DevContainer,Machine,Available_Time_Sec,PostCreate_Time_Sec,Timestamp" > "$RESULTS_FILE_PATH"
+  echo "Created CSV file: $RESULTS_FILE_PATH"
+fi
 
 # measure codespace creation times
 results=()
@@ -151,6 +158,11 @@ for (( i=1; i<=ITERATIONS; i++ )); do
 
   # store results
   results+=("$i, ${available_elapsed:-N/A}, ${postcreate_elapsed:-N/A}")
+  
+  # append to CSV file
+  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  echo "$i,$DEVCONTAINER_NAME,$MACHINE,${available_elapsed:-N/A},${postcreate_elapsed:-N/A},$timestamp" >> "$RESULTS_FILE_PATH"
+  echo "Results appended to $RESULTS_FILE_PATH"
 
   # cleanup for this iteration
   trap - EXIT
@@ -177,3 +189,4 @@ done
 echo "-----------------------------------------------------------"
 echo ""
 echo "Measurement completed."
+echo "Results written to: $RESULTS_FILE_PATH"

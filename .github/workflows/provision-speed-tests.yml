@@ -11,8 +11,13 @@ on:
 #     codespaces: write
 
 jobs:
-  test-codespace-permissions:
+  test-codespace-provisions:
     runs-on: ubuntu-latest
+    outputs:
+      average_time: ${{ steps.analyze.outputs.average_provisioning_time }}
+      total_runs: ${{ steps.analyze.outputs.total_runs }}
+      successful_runs: ${{ steps.analyze.outputs.successful_runs }}
+      failed_runs: ${{ steps.analyze.outputs.failed_runs }}
     strategy:
       max-parallel: 2
       matrix:
@@ -59,5 +64,65 @@ jobs:
           DEVCONTAINER_PATH: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           CODESPACE_MACHINE: ${{ matrix.machine-type }}
           ITERATIONS: 1
+          RESULTS_FILE_PATH: ./codespace_measurement_results_${{ matrix.devcontainer }}_${{ matrix.machine-type }}.csv
         run: |
           ./.github/scripts/measure-codespace.sh
+
+      - name: Upload Results CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.devcontainer }}-${{ matrix.machine-type }}
+          path: ./codespace_measurement_results_${{ matrix.devcontainer }}_${{ matrix.machine-type }}.csv
+          retention-days: 30
+
+      - name: Analyze Results
+        if: always()
+        id: analyze
+        run: |
+          python3 ./.github/scripts/analyze-results.py ./codespace_measurement_results_${{ matrix.devcontainer }}_${{ matrix.machine-type }}.csv
+
+  summary:
+    name: Results Summary
+    runs-on: ubuntu-latest
+    needs: test-codespace-provisions
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download all result artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./results
+
+      - name: Combine and Analyze All Results
+        run: |
+          # Combine all CSV files (skip headers after first file)
+          first=true
+          for csv_file in ./results/*/codespace_measurement_results_*.csv; do
+            if [ -f "$csv_file" ]; then
+              if $first; then
+                cat "$csv_file" > combined_results.csv
+                first=false
+              else
+                tail -n +2 "$csv_file" >> combined_results.csv
+              fi
+            fi
+          done
+          
+          # Analyze combined results
+          if [ -f combined_results.csv ]; then
+            echo "## Combined Results Analysis" >> $GITHUB_STEP_SUMMARY
+            python3 ./.github/scripts/analyze-results.py combined_results.csv
+          else
+            echo "No results found to analyze" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Combined Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: combined-results
+          path: combined_results.csv
+          retention-days: 30
