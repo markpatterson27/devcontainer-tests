@@ -19,7 +19,7 @@ jobs:
       successful_runs: ${{ steps.analyze.outputs.successful_runs }}
       failed_runs: ${{ steps.analyze.outputs.failed_runs }}
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       matrix:
         devcontainer:
           - Debian
@@ -63,7 +63,7 @@ jobs:
           GITHUB_REPO: markpatterson27/devcontainer-tests
           DEVCONTAINER_PATH: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           CODESPACE_MACHINE: ${{ matrix.machine-type }}
-          ITERATIONS: 2
+          ITERATIONS: 1
           RESULTS_FILE_PATH: ./codespace_measurement_results_${{ matrix.devcontainer }}_${{ matrix.machine-type }}.csv
         run: |
           ./.github/scripts/measure-codespace.sh
