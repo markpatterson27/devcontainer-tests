@@ -63,7 +63,7 @@ jobs:
           GITHUB_REPO: markpatterson27/devcontainer-tests
           DEVCONTAINER_PATH: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           CODESPACE_MACHINE: ${{ matrix.machine-type }}
-          ITERATIONS: 1
+          ITERATIONS: 2
           RESULTS_FILE_PATH: ./codespace_measurement_results_${{ matrix.devcontainer }}_${{ matrix.machine-type }}.csv
         run: |
           ./.github/scripts/measure-codespace.sh
