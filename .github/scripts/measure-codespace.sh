@@ -56,7 +56,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   echo "=== Iteration $i of $ITERATIONS ==="
 
   # create branch for this iteration
-  ITER_BRANCH="codespace-measure-${DEVCONTAINER_NAME}-iter${i}"
+  ITER_BRANCH="codespace-measure-${DEVCONTAINER_NAME}-${MACHINE}-iter${i}"
   CODESPACE_NAME=""
   available_elapsed=""
   postcreate_elapsed=""
