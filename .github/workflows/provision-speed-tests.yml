@@ -19,7 +19,7 @@ jobs:
       successful_runs: ${{ steps.analyze.outputs.successful_runs }}
       failed_runs: ${{ steps.analyze.outputs.failed_runs }}
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         devcontainer:
           - Debian
@@ -32,7 +32,7 @@ jobs:
           # - Universal-prebuilt
         machine-type:
           - basicLinux32gb
-          # - standardLinux32gb
+          - standardLinux32gb
           # - premiumLinux
           # - largePremiumLinux
     
