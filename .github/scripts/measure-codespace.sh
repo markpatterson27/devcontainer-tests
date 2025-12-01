@@ -30,6 +30,7 @@ TIMEOUT_SEC="${TIMEOUT_SEC:-900}"  # optional timeout for codespace creation
 POLL_INTERVAL_SEC="${POLL_INTERVAL_SEC:-5}"  # optional poll interval for checking codespace status
 
 POSTCREATE_FILE_PATH=".postcreate_ms"
+RESULTS_FILE_PATH="${RESULTS_FILE_PATH:-./codespace_measurement_results.csv}"
 
 
 echo "Measure Codespace with following parameters:
@@ -149,7 +150,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   fi
 
   # store results
-  results+=("Iteration $i: Available after ${available_elapsed:-N/A}s, Post-create after ${postcreate_elapsed:-N/A}s")
+  results+=("$i, ${available_elapsed:-N/A}, ${postcreate_elapsed:-N/A}")
 
   # cleanup for this iteration
   trap - EXIT
@@ -165,10 +166,14 @@ if [[ ${#results[@]} -eq 0 ]]; then
   exit 1
 fi
 
-# print results
+# print results in table format
 echo "Results:"
+echo "-----------------------------------------------------------"
+printf "%-12s | %-20s | %-20s\n" "Iteration" "Available Time (s) (accuracy ±${POLL_INTERVAL_SEC}s)" "Post-create Time (s)"
+echo "-----------------------------------------------------------"
 for result in "${results[@]}"; do
-  echo "$result"
+  printf "%-12s | %-20s | %-20s\n" $(echo "$result" | tr ',' ' ')
 done
+echo "-----------------------------------------------------------"
 echo ""
 echo "Measurement completed."
