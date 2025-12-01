@@ -240,7 +240,13 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
     # Results table
     md.append("## Detailed Results")
     md.append("")
-    md.append(f"| Iteration | DevContainer | Machine | Available Time (s) (accuracy ±{poll_interval:02.0f}s) | Post-Create Time (s) | Timestamp |")
+    # Ensure poll_interval is a zero-padded 2-digit int for display
+    try:
+        pi_int = round(float(poll_interval)) if poll_interval not in (None, "", "N/A") else None
+    except (TypeError, ValueError):
+        pi_int = None
+    accuracy = f" (accuracy ±{pi_int:02d}s)" if pi_int is not None else ""
+    md.append(f"| Iteration | DevContainer | Machine | Available Time (s){accuracy} | Post-Create Time (s) | Timestamp |")
     md.append("|-----------|--------------|---------|-------------------------------------|-------------------|---------------------|-----------|")
     
     for row in results:
