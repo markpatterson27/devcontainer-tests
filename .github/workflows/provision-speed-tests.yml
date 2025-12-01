@@ -1,4 +1,4 @@
-name: codespace permissions test
+name: Codespace Provision Speed Tests
 
 on:
   workflow_dispatch:
