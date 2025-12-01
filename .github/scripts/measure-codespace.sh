@@ -132,6 +132,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   # get postcreate timestamp from branch
   if [[ "$found" == true ]]; then
     sleep 10  # wait a bit for postcreate script to finish
+    echo "Retrieving post-create timestamp from branch '$ITER_BRANCH'..."
     set +e
     git pull origin "$ITER_BRANCH" 2>/dev/null
     set -e
