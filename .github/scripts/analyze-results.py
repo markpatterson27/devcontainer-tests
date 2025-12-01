@@ -42,10 +42,21 @@ def compute_statistics(results: List[Dict]) -> Dict:
     available_times = []
     postcreate_times = []
     
+    fastest_iteration = None
+    fastest_time = float('inf')
+    
     for row in results:
         avail_time = parse_time_value(row.get('Available_Time_Sec', ''))
         if avail_time is not None:
             available_times.append(avail_time)
+            if avail_time < fastest_time:
+                fastest_time = avail_time
+                fastest_iteration = {
+                    'iteration': row.get('Iteration'),
+                    'devcontainer': row.get('DevContainer'),
+                    'machine': row.get('Machine'),
+                    'time': avail_time
+                }
         
         post_time = parse_time_value(row.get('PostCreate_Time_Sec', ''))
         if post_time is not None:
@@ -56,6 +67,9 @@ def compute_statistics(results: List[Dict]) -> Dict:
         'successful_runs': len(available_times),
         'failed_runs': len(results) - len(available_times)
     }
+    
+    if fastest_iteration:
+        stats['fastest_iteration'] = fastest_iteration
     
     if available_times:
         stats['available_mean'] = mean(available_times)
@@ -76,6 +90,44 @@ def compute_statistics(results: List[Dict]) -> Dict:
             stats['postcreate_stdev'] = 0.0
     
     return stats
+
+def compute_combo_statistics(results: List[Dict]) -> Dict:
+    """Compute statistics grouped by devcontainer:machine combinations."""
+    combos = {}
+    
+    for row in results:
+        devcontainer = row.get('DevContainer', 'unknown')
+        machine = row.get('Machine', 'unknown')
+        combo_key = f"{devcontainer}:{machine}"
+        
+        avail_time = parse_time_value(row.get('Available_Time_Sec', ''))
+        if avail_time is not None:
+            if combo_key not in combos:
+                combos[combo_key] = {
+                    'devcontainer': devcontainer,
+                    'machine': machine,
+                    'times': []
+                }
+            combos[combo_key]['times'].append(avail_time)
+    
+    # Compute stats for each combo
+    combo_stats = []
+    for combo_key, data in combos.items():
+        times = data['times']
+        if times:
+            combo_stat = {
+                'combo': combo_key,
+                'devcontainer': data['devcontainer'],
+                'machine': data['machine'],
+                'mean': mean(times),
+                'min': min(times),
+                'max': max(times),
+                'count': len(times),
+                'stdev': stdev(times) if len(times) > 1 else 0.0
+            }
+            combo_stats.append(combo_stat)
+    
+    return combo_stats
 
 def identify_outliers(results: List[Dict], stats: Dict) -> List[Tuple[str, float, str]]:
     """Identify outliers using IQR method (values beyond 1.5 * IQR from Q1/Q3)."""
@@ -98,7 +150,7 @@ def identify_outliers(results: List[Dict], stats: Dict) -> List[Tuple[str, float
     
     return outliers
 
-def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tuple]) -> str:
+def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tuple], combo_stats: List[Dict] = None) -> str:
     """Format analysis results as GitHub markdown summary."""
     md = ["# Codespace Provisioning Analysis", ""]
     
@@ -113,6 +165,45 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
     md.append(f"- **Successful**: {stats['successful_runs']}")
     md.append(f"- **Failed**: {stats['failed_runs']}")
     md.append("")
+    
+    # Fastest iteration highlight
+    if 'fastest_iteration' in stats:
+        fastest = stats['fastest_iteration']
+        md.append("## 🏆 Fastest Provision")
+        md.append(f"- **Time**: {fastest['time']:.2f}s")
+        md.append(f"- **Configuration**: {fastest['devcontainer']} on {fastest['machine']}")
+        md.append(f"- **Iteration**: {fastest['iteration']}")
+        md.append("")
+    
+    # Combo-level insights (for combined results)
+    if combo_stats:
+        # Find fastest combo by mean
+        fastest_combo = min(combo_stats, key=lambda x: x['mean'])
+        md.append("## ⚡ Fastest DevContainer:Machine Combo (by average)")
+        md.append(f"- **Combo**: `{fastest_combo['combo']}`")
+        md.append(f"- **Average Time**: {fastest_combo['mean']:.2f}s")
+        md.append(f"- **Min/Max**: {fastest_combo['min']:.2f}s / {fastest_combo['max']:.2f}s")
+        md.append(f"- **Runs**: {fastest_combo['count']}")
+        md.append("")
+        
+        # Find combo with largest standard deviation
+        highest_variance = max(combo_stats, key=lambda x: x['stdev'])
+        md.append("## 📊 Most Variable Combo (highest std dev)")
+        md.append(f"- **Combo**: `{highest_variance['combo']}`")
+        md.append(f"- **Std Dev**: {highest_variance['stdev']:.2f}s")
+        md.append(f"- **Average Time**: {highest_variance['mean']:.2f}s")
+        md.append(f"- **Min/Max**: {highest_variance['min']:.2f}s / {highest_variance['max']:.2f}s")
+        md.append("")
+        
+        # Combo comparison table
+        md.append("## DevContainer:Machine Comparison")
+        md.append("")
+        md.append("| Combo | Average (s) | Min (s) | Max (s) | Std Dev (s) | Runs |")
+        md.append("|-------|-------------|---------|---------|-------------|------|")
+        for combo in sorted(combo_stats, key=lambda x: x['mean']):
+            md.append(f"| `{combo['combo']}` | {combo['mean']:.2f} | {combo['min']:.2f} | "
+                     f"{combo['max']:.2f} | {combo['stdev']:.2f} | {combo['count']} |")
+        md.append("")
     
     # Available time statistics
     if 'available_mean' in stats:
@@ -200,8 +291,14 @@ def main():
     stats = compute_statistics(results)
     outliers = identify_outliers(results, stats)
     
+    # Compute combo statistics if there are multiple combos (combined results)
+    combo_stats = None
+    unique_combos = set(f"{r.get('DevContainer', '')}:{r.get('Machine', '')}" for r in results)
+    if len(unique_combos) > 1:
+        combo_stats = compute_combo_statistics(results)
+    
     # Generate markdown summary
-    summary = format_summary_markdown(results, stats, outliers)
+    summary = format_summary_markdown(results, stats, outliers, combo_stats)
     
     # Write to GitHub Step Summary if available
     summary_file = os.environ.get('GITHUB_STEP_SUMMARY')
