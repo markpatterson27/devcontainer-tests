@@ -79,8 +79,9 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   }
   trap cleanup EXIT
   
-  git checkout -b "$ITER_BRANCH" > /dev/null
-  git push -u origin "$ITER_BRANCH" > /dev/null
+  # Create branch, overwriting if it already exists
+  git checkout -B "$ITER_BRANCH" > /dev/null
+  git push -u origin "$ITER_BRANCH" --force > /dev/null
   echo "Created and switched to branch $ITER_BRANCH"
 
   # creation timestamp
