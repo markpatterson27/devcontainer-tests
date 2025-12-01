@@ -102,6 +102,11 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
     """Format analysis results as GitHub markdown summary."""
     md = ["# Codespace Provisioning Analysis", ""]
     
+    # Get poll interval for accuracy note
+    poll_interval = None
+    if results:
+        poll_interval = results[0].get('Poll_Interval_Sec', '5')
+    
     # Overall statistics
     md.append("## Overall Statistics")
     md.append(f"- **Total Runs**: {stats['total_runs']}")
@@ -111,7 +116,8 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
     
     # Available time statistics
     if 'available_mean' in stats:
-        md.append("## Provisioning Time (Available State)")
+        accuracy_note = f" (accuracy ±{poll_interval}s)" if poll_interval else ""
+        md.append(f"## Provisioning Time (Available State){accuracy_note}")
         md.append(f"- **Average**: {stats['available_mean']:.2f}s")
         md.append(f"- **Min**: {stats['available_min']:.2f}s")
         md.append(f"- **Max**: {stats['available_max']:.2f}s")
@@ -143,10 +149,11 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
     # Results table
     md.append("## Detailed Results")
     md.append("")
-    md.append("| Iteration | DevContainer | Machine | Available Time (s) | Post-Create Time (s) | Timestamp |")
-    md.append("|-----------|--------------|---------|-------------------|---------------------|-----------|")
+    md.append(f"| Iteration | DevContainer | Machine | Available Time (s) (accuracy ±{poll_interval:02.0f}s) | Post-Create Time (s) | Timestamp |")
+    md.append("|-----------|--------------|---------|-------------------------------------|-------------------|---------------------|-----------|")
     
     for row in results:
+        poll_val = row.get('Poll_Interval_Sec', 'N/A')
         md.append(f"| {row['Iteration']} | {row['DevContainer']} | {row['Machine']} | "
                  f"{row['Available_Time_Sec']} | {row['PostCreate_Time_Sec']} | {row['Timestamp']} |")
     

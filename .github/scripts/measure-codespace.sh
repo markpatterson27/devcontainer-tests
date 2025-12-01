@@ -46,7 +46,7 @@ DEVCONTAINER_NAME=$(basename $(dirname "$DEVCONTAINER_PATH"))
 
 # initialize CSV file with headers if it doesn't exist
 if [[ ! -f "$RESULTS_FILE_PATH" ]]; then
-  echo "Iteration,DevContainer,Machine,Available_Time_Sec,PostCreate_Time_Sec,Timestamp" > "$RESULTS_FILE_PATH"
+  echo "Iteration,DevContainer,Machine,Available_Time_Sec,Poll_Interval_Sec,PostCreate_Time_Sec,Timestamp" > "$RESULTS_FILE_PATH"
   echo "Created CSV file: $RESULTS_FILE_PATH"
 fi
 
@@ -161,7 +161,7 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   
   # append to CSV file
   timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  echo "$i,$DEVCONTAINER_NAME,$MACHINE,${available_elapsed:-N/A},${postcreate_elapsed:-N/A},$timestamp" >> "$RESULTS_FILE_PATH"
+  echo "$i,$DEVCONTAINER_NAME,$MACHINE,${available_elapsed:-N/A},$POLL_INTERVAL_SEC,${postcreate_elapsed:-N/A},$timestamp" >> "$RESULTS_FILE_PATH"
   echo "Results appended to $RESULTS_FILE_PATH"
 
   # cleanup for this iteration
