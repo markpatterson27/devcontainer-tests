@@ -247,7 +247,7 @@ def format_summary_markdown(results: List[Dict], stats: Dict, outliers: List[Tup
         pi_int = None
     accuracy = f" (accuracy ±{pi_int:02d}s)" if pi_int is not None else ""
     md.append(f"| Iteration | DevContainer | Machine | Available Time (s){accuracy} | Post-Create Time (s) | Timestamp |")
-    md.append("|-----------|--------------|---------|-------------------------------------|-------------------|---------------------|-----------|")
+    md.append("|-----------|--------------|---------|-------------------------------------|---------------------|-----------|")
     
     for row in results:
         poll_val = row.get('Poll_Interval_Sec', 'N/A')
