@@ -18,22 +18,22 @@
 		// "ghcr.io/devcontainers/features/sshd:1": {
 		// 	"version": "latest"
 		// },
-		// "ghcr.io/devcontainers/features/docker-in-docker:2": {
-		// 	"moby": true,
-		// 	"azureDnsAutoDetection": true,
-		// 	"installDockerBuildx": true,
-		// 	"installDockerComposeSwitch": true,
-		// 	"version": "latest",
-		// 	"dockerDashComposeVersion": "v2"
-		// },
-		// "ghcr.io/devcontainers/features/dotnet:2": {
-		// 	"version": "10.0"
-		// },
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"installDockerComposeSwitch": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "v2"
+		},
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "10.0"
+		},
 		"ghcr.io/devcontainers/features/python:1": {
 			"installTools": true,
 			"version": "3.12"
-		}
-		// "../features/sqltools": {}
+		},
+		"../features/sqltools": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
