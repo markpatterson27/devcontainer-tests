@@ -49,6 +49,28 @@ for (( i=1; i<=ITERATIONS; i++ )); do
 
   # create branch for this iteration
   ITER_BRANCH="codespace-measure-${DEVCONTAINER_NAME}-iter${i}"
+  CODESPACE_NAME=""
+  available_elapsed=""
+  postcreate_elapsed=""
+  
+  # trap cleanup to ensure it runs even on error
+  cleanup() {
+    echo "Running cleanup..."
+    if [[ -n "$CODESPACE_NAME" ]]; then
+      echo "Deleting codespace '$CODESPACE_NAME'..."
+      gh codespace delete -c "$CODESPACE_NAME" --force 2>/dev/null || echo "Failed to delete codespace (may not exist)"
+    fi
+    
+    if [[ -n "$ITER_BRANCH" ]]; then
+      echo "Cleaning up branch '$ITER_BRANCH'..."
+      git checkout main 2>/dev/null || true
+      git branch -D "$ITER_BRANCH" 2>/dev/null || echo "Failed to delete local branch (may not exist)"
+      git push origin --delete "$ITER_BRANCH" 2>/dev/null || echo "Failed to delete remote branch (may not exist)"
+    fi
+    echo "Cleanup completed for iteration $i"
+  }
+  trap cleanup EXIT
+  
   git checkout -b "$ITER_BRANCH" > /dev/null
   git push -u origin "$ITER_BRANCH" > /dev/null
   echo "Created and switched to branch $ITER_BRANCH"
@@ -67,7 +89,9 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   set -e
   if [[ $ret -ne 0 || -z "$CODESPACE_NAME" ]]; then
     echo "Failed to create codespace. (gh codespace create exited with code $ret)"
-    break
+    trap - EXIT
+    cleanup
+    continue
   fi
   echo "** Codespace '$CODESPACE_NAME' creation initiated."
 
@@ -76,22 +100,29 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   found=false
   while [[ $(date +%s) -lt $timeout_time ]]; do
     sleep "$POLL_INTERVAL_SEC"
-    status=$(gh codespace view -c "$CODESPACE_NAME" --json state --jq ".state")
-    if [[ "$status" == "Available" ]]; then
+    set +e
+    status=$(gh codespace view -c "$CODESPACE_NAME" --json state --jq ".state" 2>/dev/null)
+    view_ret=$?
+    set -e
+    
+    if [[ $view_ret -ne 0 ]]; then
+      echo "Error viewing codespace. (gh codespace view exited with code $view_ret)"
+    
+    elif [[ "$status" == "Available" ]]; then
       end_time=$(date +%s)
       available_elapsed=$((end_time - ${create_ts_ms%.*}))
       echo "Codespace '$CODESPACE_NAME' is available after ${available_elapsed}s"
       found=true
       break
-    fi
 
     # if codespace is in error state, break and report
-    if [[ "$status" == "Error" || "$status" == "Deleted" ]]; then
+    elif [[ "$status" == "Error" || "$status" == "Deleted" ]]; then
       echo "Codespace '$CODESPACE_NAME' entered error state: $status"
       break
+    
+    else
+      echo "Current status: $status. Elapsed time: $(( $(date +%s) - ${create_ts_ms%.*} ))s. Checking again in ${POLL_INTERVAL_SEC}s..."
     fi
-
-    echo "Current status: $status. Elapsed time: $(( $(date +%s) - ${create_ts_ms%.*} ))s. Checking again in ${POLL_INTERVAL_SEC}s..."
   done
 
   if [[ $(date +%s) -ge $timeout_time ]]; then
@@ -101,7 +132,9 @@ for (( i=1; i<=ITERATIONS; i++ )); do
   # get postcreate timestamp from branch
   if [[ "$found" == true ]]; then
     sleep 10  # wait a bit for postcreate script to finish
-    git pull origin "$ITER_BRANCH"
+    set +e
+    git pull origin "$ITER_BRANCH" 2>/dev/null
+    set -e
     if [[ -f "$POSTCREATE_FILE_PATH" ]]; then
       postcreate_time=$(cat "$POSTCREATE_FILE_PATH")
       postcreate_iso=$(date -u -d "@${postcreate_time%.*}" +"%Y-%m-%dT%H:%M:%SZ")
@@ -114,15 +147,12 @@ for (( i=1; i<=ITERATIONS; i++ )); do
     echo "Skipping post-create timestamp retrieval due to codespace not being available."
   fi
 
-  # cleanup: delete codespace and branch
-  gh codespace delete -c "$CODESPACE_NAME" --force
-  git checkout main
-  git branch -D "$ITER_BRANCH"
-  git push origin --delete "$ITER_BRANCH"
-  echo "Cleaned up codespace and branch '$ITER_BRANCH'"
-
   # store results
   results+=("Iteration $i: Available after ${available_elapsed:-N/A}s, Post-create after ${postcreate_elapsed:-N/A}s")
+
+  # cleanup for this iteration
+  trap - EXIT
+  cleanup
      
 done
 echo "=== Finished all iterations ==="
