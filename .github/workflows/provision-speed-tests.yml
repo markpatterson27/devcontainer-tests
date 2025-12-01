@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - '.github/scripts/measure-codespace.sh'
-      - '.github/workflows/test-permissions.yml'
+      - '.github/workflows/provision-speed-tests.yml'
 
 # permissions:
 #     codespaces: write
