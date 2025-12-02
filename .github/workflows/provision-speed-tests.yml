@@ -19,21 +19,21 @@ jobs:
       successful_runs: ${{ steps.analyze.outputs.successful_runs }}
       failed_runs: ${{ steps.analyze.outputs.failed_runs }}
     strategy:
-      max-parallel: 2
+      max-parallel: 3
       matrix:
         devcontainer:
           - Debian
           - Debian-prebuilt
-          # - dotnet
-          # - dotnet-prebuilt
-          # - Ubuntu
-          # - Ubuntu-prebuilt
-          # - Universal
-          # - Universal-prebuilt
+          - dotnet
+          - dotnet-prebuilt
+          - Ubuntu
+          - Ubuntu-prebuilt
+          - Universal
+          - Universal-prebuilt
         machine-type:
           - basicLinux32gb
           - standardLinux32gb
-          # - premiumLinux
+          - premiumLinux
           # - largePremiumLinux
     
     steps:
