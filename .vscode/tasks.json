@@ -1,0 +1,103 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start MariaDB",
+            "type": "shell",
+            "command": "docker run --name mariadb-devcontainer -e MYSQL_ROOT_PASSWORD=P@ssw0rd -e MYSQL_DATABASE=devcontainer_db -p 3306:3306 -d mariadb:latest",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop MariaDB",
+            "type": "shell",
+            "command": "docker stop mariadb-devcontainer && docker rm mariadb-devcontainer",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Start PostgresSQL",
+            "type": "shell",
+            "command": "docker run --name postgres-devcontainer -e POSTGRES_PASSWORD=P@ssw0rd -e POSTGRES_DB=devcontainer_db -p 5432:5432 -d postgres:latest",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop PostgresSQL",
+            "type": "shell",
+            "command": "docker stop postgres-devcontainer && docker rm postgres-devcontainer",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Start MS SQL Server",
+            "type": "shell",
+            "command": "docker run --name mssql-devcontainer -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=P@ssw0rd' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop MS SQL Server",
+            "type": "shell",
+            "command": "docker stop mssql-devcontainer && docker rm mssql-devcontainer",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Start Redis",
+            "type": "shell",
+            "command": "docker run --name redis-devcontainer -p 6379:6379 -d redis:latest",
+            "problemMatcher": [],
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

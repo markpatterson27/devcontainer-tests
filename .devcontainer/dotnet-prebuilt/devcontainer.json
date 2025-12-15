@@ -25,6 +25,51 @@
 						"trustServerCertificate": true,
 						"profileName": "local-container"
 					}
+				],
+				"sqltools.connections": [
+					{
+						"mysqlOptions": {
+							"authProtocol": "default",
+							"enableSsl": "Disabled"
+						},
+						"ssh": "Disabled",
+						"previewLimit": 50,
+						"server": "localhost",
+						"port": 3306,
+						"driver": "MariaDB",
+						"name": "MariaDB",
+						"username": "root",
+						"password": "P@ssw0rd",
+						"database": "devcontainer_db"
+					},
+					{
+						"ssh": "Disabled",
+						"previewLimit": 50,
+						"server": "localhost",
+						"port": 5432,
+						"driver": "PostgreSQL",
+						"name": "PostgreSQL",
+						"username": "postgres",
+						"database": "devcontainer_db",
+						"password": "P@ssw0rd"
+					},
+					{
+						"connectionTimeout": 15,
+						"mssqlOptions": {
+							"appName": "SQLTools",
+							"useUTC": true,
+							"encrypt": true,
+							"trustServerCertificate": true
+						},
+						"ssh": "Disabled",
+						"previewLimit": 50,
+						"server": "localhost",
+						"port": 1433,
+						"driver": "MSSQL",
+						"name": "SQLServer",
+						"username": "sa",
+						"password": "P@ssw0rd"
+					}
 				]
 			},
 
@@ -35,7 +80,14 @@
 				"ms-mssql.mssql",
 				"redhat.vscode-yaml",
 				"ms-azuretools.vscode-docker",
-				"github.vscode-github-actions"
+				"github.vscode-github-actions",
+				"ms-azuretools.vscode-containers",
+				"Redis.redis-for-vscode",
+				"mtxr.sqltools",
+				"mtxr.sqltools-driver-mysql",
+				"mtxr.sqltools-driver-pg",
+				"mtxr.sqltools-driver-mssql",
+				"mtxr.sqltools-driver-sqlite"
 			]
 		}	
 	}
