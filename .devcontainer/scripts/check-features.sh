@@ -92,6 +92,21 @@ check_python() {
   fi
 }
 
+check_sqlite() {
+  print_section "SQLite"
+  if have sqlite3; then
+    local v
+    v=$(sqlite3 --version 2>/dev/null || true)
+    if [[ -n "$v" ]]; then
+      print_ok "$v"
+    else
+      print_warn "sqlite3 installed but version not detected"
+    fi
+  else
+    print_err "sqlite3 not found on PATH"
+  fi
+}
+
 check_sqlcmd() {
   print_section "SQL Server Tools (sqlcmd)"
   if have sqlcmd; then
@@ -142,6 +157,7 @@ main() {
   check_docker
   check_dotnet
   check_python
+  check_sqlite
   check_sqlcmd
   check_git
 
