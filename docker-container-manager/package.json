@@ -1,0 +1,98 @@
+{
+  "name": "docker-container-manager",
+  "displayName": "Docker Container Manager",
+  "description": "Easily pull, start and stop Docker containers for SQL Server, PostgreSQL, MariaDB and Redis",
+  "version": "0.0.1",
+  "publisher": "devcontainer-tests",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:dockerContainerManager"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "docker-container-manager",
+          "title": "Docker Containers",
+          "icon": "resources/container.svg"
+        }
+      ]
+    },
+    "views": {
+      "docker-container-manager": [
+        {
+          "id": "dockerContainerManager",
+          "name": "Database Containers"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "dockerContainerManager.pullImage",
+        "title": "Pull Image",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "dockerContainerManager.startContainer",
+        "title": "Start Container",
+        "icon": "$(play)"
+      },
+      {
+        "command": "dockerContainerManager.stopContainer",
+        "title": "Stop Container",
+        "icon": "$(stop)"
+      },
+      {
+        "command": "dockerContainerManager.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "dockerContainerManager.refresh",
+          "when": "view == dockerContainerManager",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "dockerContainerManager.pullImage",
+          "when": "view == dockerContainerManager && viewItem == container-notpulled",
+          "group": "inline"
+        },
+        {
+          "command": "dockerContainerManager.startContainer",
+          "when": "view == dockerContainerManager && viewItem == container-stopped",
+          "group": "inline"
+        },
+        {
+          "command": "dockerContainerManager.stopContainer",
+          "when": "view == dockerContainerManager && viewItem == container-running",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
