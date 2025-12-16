@@ -10,6 +10,9 @@ SERVICES (Activity Bar Title)
 │
 └─ Development Services (View Title)
    │
+   ├─ 👋 Welcome to Services Manager
+   │  └─ Click groups below to manage services
+   │
    ├─ 📊 Databases (Expanded)
    │  │
    │  ├─ ✓ SQL Server - Running
@@ -35,6 +38,8 @@ SERVICES (Activity Bar Title)
       └─ ✓ Redis - Running
          └─ 🔌 Port: 6379
 ```
+
+**Note:** The welcome item at the top provides quick-start instructions and is always visible.
 
 ## Key Changes from Previous Version
 

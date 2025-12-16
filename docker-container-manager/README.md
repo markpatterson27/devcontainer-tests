@@ -15,12 +15,19 @@ A VSCode extension that makes it easy to manage development services including d
 ## Usage
 
 1. Open the Services view from the activity bar
-2. Services are grouped by type (Databases, Caches)
-3. Expand a group to see all services of that type
-4. For services not yet pulled, click the cloud download icon to pull the image
-5. Once pulled, click the play icon to start the service
-6. Expand a running service to see connection details
-7. Click the stop icon to stop a running service
+2. Read the welcome message at the top of the view for quick instructions
+3. Services are grouped by type (Databases, Caches)
+4. Expand a group to see all services of that type
+5. For services not yet pulled, click the cloud download icon to pull the image
+6. Once pulled, click the play icon to start the service
+7. Expand a running service to see connection details
+8. Click the stop icon to stop a running service
+
+The welcome message provides quick-start guidance:
+- Expand service groups to browse available services
+- Pull images before first use
+- Start/stop services as needed
+- View connection details by expanding services
 
 ## Service Details
 

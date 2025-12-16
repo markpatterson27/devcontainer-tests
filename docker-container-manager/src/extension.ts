@@ -111,7 +111,7 @@ const SERVICES: ServiceConfig[] = [
     }
 ];
 
-type TreeNode = ServiceGroupItem | ServiceItem | ServiceDetailItem;
+type TreeNode = WelcomeItem | ServiceGroupItem | ServiceItem | ServiceDetailItem;
 
 class ServicesProvider implements vscode.TreeDataProvider<TreeNode> {
     private _onDidChangeTreeData: vscode.EventEmitter<TreeNode | undefined | null | void> = new vscode.EventEmitter<TreeNode | undefined | null | void>();
@@ -127,8 +127,11 @@ class ServicesProvider implements vscode.TreeDataProvider<TreeNode> {
 
     async getChildren(element?: TreeNode): Promise<TreeNode[]> {
         if (!element) {
-            // Root level - return groups
-            return this.getServiceGroups();
+            // Root level - return welcome message and groups
+            const items: TreeNode[] = [];
+            items.push(new WelcomeItem());
+            items.push(...this.getServiceGroups());
+            return items;
         } else if (element instanceof ServiceGroupItem) {
             // Group level - return services in this group
             return this.getServicesInGroup(element.type);
@@ -187,6 +190,22 @@ class ServicesProvider implements vscode.TreeDataProvider<TreeNode> {
         }
         
         return details;
+    }
+}
+
+class WelcomeItem extends vscode.TreeItem {
+    constructor() {
+        super('👋 Welcome to Services Manager', vscode.TreeItemCollapsibleState.None);
+        this.contextValue = 'welcome-item';
+        this.tooltip = 'Manage development services like databases and caches.\n\n' +
+            'Quick Start:\n' +
+            '1. Expand a service group (Databases, Caches)\n' +
+            '2. Pull image if needed (cloud icon)\n' +
+            '3. Start service (play icon)\n' +
+            '4. Expand service to see connection details\n' +
+            '5. Stop service when done (stop icon)';
+        this.description = 'Click groups below to manage services';
+        this.iconPath = new vscode.ThemeIcon('info');
     }
 }
 
