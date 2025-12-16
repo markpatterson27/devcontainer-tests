@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Docker Container Manager extension is now active');
@@ -159,20 +159,20 @@ class ContainerItem extends vscode.TreeItem {
 
 async function getContainerStatus(config: ContainerConfig): Promise<ContainerStatus> {
     try {
-        // Check if image exists
-        const { stdout: imagesOutput } = await execAsync(`docker images -q ${config.image}`);
+        // Check if image exists - use execFile for safer execution
+        const { stdout: imagesOutput } = await execFileAsync('docker', ['images', '-q', config.image]);
         if (!imagesOutput.trim()) {
             return 'notpulled';
         }
 
         // Check if container is running
-        const { stdout: psOutput } = await execAsync(`docker ps -q -f name=${config.containerName}`);
+        const { stdout: psOutput } = await execFileAsync('docker', ['ps', '-q', '-f', `name=${config.containerName}`]);
         if (psOutput.trim()) {
             return 'running';
         }
 
         // Check if container exists but is stopped
-        const { stdout: psAllOutput } = await execAsync(`docker ps -aq -f name=${config.containerName}`);
+        const { stdout: psAllOutput } = await execFileAsync('docker', ['ps', '-aq', '-f', `name=${config.containerName}`]);
         if (psAllOutput.trim()) {
             return 'stopped';
         }
@@ -193,7 +193,7 @@ async function pullImage(item: ContainerItem, provider: ContainerProvider) {
         },
         async () => {
             try {
-                await execAsync(`docker pull ${item.config.image}`);
+                await execFileAsync('docker', ['pull', item.config.image]);
                 vscode.window.showInformationMessage(`Successfully pulled ${item.config.displayName} image`);
                 provider.refresh();
             } catch (error) {
@@ -213,19 +213,24 @@ async function startContainer(item: ContainerItem, provider: ContainerProvider) 
         async () => {
             try {
                 // Check if container exists
-                const { stdout: psAllOutput } = await execAsync(`docker ps -aq -f name=${item.config.containerName}`);
+                const { stdout: psAllOutput } = await execFileAsync('docker', ['ps', '-aq', '-f', `name=${item.config.containerName}`]);
                 
                 if (psAllOutput.trim()) {
                     // Container exists, just start it
-                    await execAsync(`docker start ${item.config.containerName}`);
+                    await execFileAsync('docker', ['start', item.config.containerName]);
                 } else {
                     // Create and start new container
-                    const envFlags = Object.entries(item.config.env)
-                        .map(([key, value]) => `-e "${key}=${value}"`)
-                        .join(' ');
+                    const dockerArgs = ['run', '--name', item.config.containerName];
                     
-                    const command = `docker run --name ${item.config.containerName} ${envFlags} -p ${item.config.port}:${item.config.port} -d ${item.config.image}`;
-                    await execAsync(command);
+                    // Add environment variables
+                    for (const [key, value] of Object.entries(item.config.env)) {
+                        dockerArgs.push('-e', `${key}=${value}`);
+                    }
+                    
+                    // Add port mapping and image
+                    dockerArgs.push('-p', `${item.config.port}:${item.config.port}`, '-d', item.config.image);
+                    
+                    await execFileAsync('docker', dockerArgs);
                 }
                 
                 vscode.window.showInformationMessage(`${item.config.displayName} started successfully on port ${item.config.port}`);
@@ -246,7 +251,7 @@ async function stopContainer(item: ContainerItem, provider: ContainerProvider) {
         },
         async () => {
             try {
-                await execAsync(`docker stop ${item.config.containerName}`);
+                await execFileAsync('docker', ['stop', item.config.containerName]);
                 vscode.window.showInformationMessage(`${item.config.displayName} stopped successfully`);
                 provider.refresh();
             } catch (error) {
