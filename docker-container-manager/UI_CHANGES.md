@@ -15,19 +15,19 @@ SERVICES (Activity Bar Title)
    │  ├─ ✓ SQL Server - Running
    │  │  ├─ 🔌 Port: 1433
    │  │  ├─ 👤 Username: sa
-   │  │  ├─ 🔑 Password: P@ssw0rd
+   │  │  ├─ 🔑 Password: •••••••• (hover to reveal)
    │  │  └─ 🗄️  Database: master
    │  │
    │  ├─ ○ PostgreSQL - Stopped
    │  │  ├─ 🔌 Port: 5432
    │  │  ├─ 👤 Username: postgres
-   │  │  ├─ 🔑 Password: P@ssw0rd
+   │  │  ├─ 🔑 Password: •••••••• (hover to reveal)
    │  │  └─ 🗄️  Database: devcontainer_db
    │  │
    │  └─ ⬇ MariaDB - Not pulled
    │     ├─ 🔌 Port: 3306
    │     ├─ 👤 Username: root
-   │     ├─ 🔑 Password: P@ssw0rd
+   │     ├─ 🔑 Password: •••••••• (hover to reveal)
    │     └─ 🗄️  Database: devcontainer_db
    │
    └─ 💾 Caches (Expanded)

@@ -256,16 +256,17 @@ class ServiceItem extends vscode.TreeItem {
 
 class ServiceDetailItem extends vscode.TreeItem {
     constructor(
-        public readonly label: string,
+        labelText: string,
         public readonly value: string,
         public readonly iconName: string,
         public readonly actualValue?: string // For password reveal in tooltip
     ) {
-        super(`${label}: ${value}`, vscode.TreeItemCollapsibleState.None);
+        super(labelText, vscode.TreeItemCollapsibleState.None);
+        this.label = `${labelText}: ${value}`;
         this.contextValue = 'service-detail';
         this.iconPath = new vscode.ThemeIcon(iconName);
         // Show actual value in tooltip (useful for passwords)
-        this.tooltip = actualValue ? `${label}: ${actualValue}` : `${label}: ${value}`;
+        this.tooltip = actualValue ? `${labelText}: ${actualValue}` : `${labelText}: ${value}`;
     }
 }
 
