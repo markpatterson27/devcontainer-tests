@@ -1,7 +1,7 @@
 {
   "name": "docker-container-manager",
-  "displayName": "Docker Container Manager",
-  "description": "Easily pull, start and stop Docker containers for SQL Server, PostgreSQL, MariaDB and Redis",
+  "displayName": "Services",
+  "description": "Easily manage development services including databases and caches",
   "version": "0.0.1",
   "publisher": "devcontainer-tests",
   "engines": {
@@ -19,8 +19,8 @@
       "activitybar": [
         {
           "id": "docker-container-manager",
-          "title": "Docker Containers",
-          "icon": "resources/container.svg"
+          "title": "Services",
+          "icon": "resources/services.svg"
         }
       ]
     },
@@ -28,7 +28,7 @@
       "docker-container-manager": [
         {
           "id": "dockerContainerManager",
-          "name": "Database Containers"
+          "name": "Development Services"
         }
       ]
     },
@@ -65,17 +65,17 @@
       "view/item/context": [
         {
           "command": "dockerContainerManager.pullImage",
-          "when": "view == dockerContainerManager && viewItem == container-notpulled",
+          "when": "view == dockerContainerManager && viewItem == service-notpulled",
           "group": "inline"
         },
         {
           "command": "dockerContainerManager.startContainer",
-          "when": "view == dockerContainerManager && viewItem == container-stopped",
+          "when": "view == dockerContainerManager && viewItem == service-stopped",
           "group": "inline"
         },
         {
           "command": "dockerContainerManager.stopContainer",
-          "when": "view == dockerContainerManager && viewItem == container-running",
+          "when": "view == dockerContainerManager && viewItem == service-running",
           "group": "inline"
         }
       ]

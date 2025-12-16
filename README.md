@@ -2,15 +2,16 @@
 
 Testing devcontainer configurations.
 
-## Docker Container Manager Extension
+## Services Manager Extension
 
-This repository includes a VSCode extension for easily managing Docker containers for development databases. The extension provides a visual interface for pulling images and starting/stopping containers for SQL Server, PostgreSQL, MariaDB, and Redis.
+This repository includes a VSCode extension for easily managing development services including databases and caches. The extension provides a visual interface organized by service type, with expandable service details showing connection information.
 
 **Key Features:**
-- Visual container management in VSCode sidebar
+- Services grouped by type (Databases, Caches)
+- Expandable service details (port, username, password, database)
 - One-click pull, start, and stop operations
 - Support for SQL Server, PostgreSQL, MariaDB, and Redis
-- Real-time container status indicators
+- Easy to extend with new services
 
 **Location:** [`docker-container-manager/`](docker-container-manager/)
 
