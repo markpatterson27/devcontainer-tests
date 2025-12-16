@@ -175,9 +175,10 @@ class ServicesProvider implements vscode.TreeDataProvider<TreeNode> {
             details.push(new ServiceDetailItem('Username', service.config.username, 'account'));
         }
         
-        // Password
+        // Password (masked for security)
         if (service.config.password) {
-            details.push(new ServiceDetailItem('Password', service.config.password, 'key'));
+            const maskedPassword = '•'.repeat(service.config.password.length);
+            details.push(new ServiceDetailItem('Password', maskedPassword, 'key', service.config.password));
         }
         
         // Database
@@ -257,12 +258,14 @@ class ServiceDetailItem extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly value: string,
-        public readonly iconName: string
+        public readonly iconName: string,
+        public readonly actualValue?: string // For password reveal in tooltip
     ) {
         super(`${label}: ${value}`, vscode.TreeItemCollapsibleState.None);
         this.contextValue = 'service-detail';
         this.iconPath = new vscode.ThemeIcon(iconName);
-        this.tooltip = `${label}: ${value}`;
+        // Show actual value in tooltip (useful for passwords)
+        this.tooltip = actualValue ? `${label}: ${actualValue}` : `${label}: ${value}`;
     }
 }
 
