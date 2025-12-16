@@ -48,6 +48,16 @@ A VSCode extension that makes it easy to pull, start and stop Docker containers 
 - Docker must be installed and running on your system
 - Docker daemon must be accessible from the command line
 
+## Security Considerations
+
+**⚠️ Development Use Only**: This extension is designed for local development environments. The containers use default passwords (`P@ssw0rd`) for convenience during development. 
+
+**Important Security Notes**:
+- Do not use these containers in production environments
+- Do not expose these containers to public networks
+- The default passwords are intended for local development only
+- For production use, always configure secure passwords and proper authentication
+
 ## Extension Settings
 
 This extension does not add any VS Code settings.

@@ -95,6 +95,17 @@ The Docker Container Manager extension provides a visual interface in VSCode for
 - Docker daemon must be accessible from the command line
 - VSCode version 1.80.0 or higher
 
+## Security Considerations
+
+**⚠️ Development Use Only**: This extension is designed for local development environments. The containers use default passwords (`P@ssw0rd`) for convenience during development.
+
+**Important Security Notes**:
+- Do not use these containers in production environments
+- Do not expose these containers to public networks
+- The default passwords are intended for local development only
+- For production use, always configure secure passwords and proper authentication
+- The extension uses `execFile` to prevent command injection vulnerabilities
+
 ## Development
 
 ### Building the Extension
