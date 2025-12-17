@@ -1,5 +1,5 @@
 # Extension Builder
-FROM node:lts-slim AS extension-builder
+FROM node:24 AS extension-builder
 
 # Install vsce
 RUN npm install -g @vscode/vsce
