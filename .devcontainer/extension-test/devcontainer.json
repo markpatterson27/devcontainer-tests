@@ -1,0 +1,58 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/universal
+{
+	"name": "Extension Test",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "../.."
+	},
+
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {
+	// 	"../features/sqltools": {}
+	// },
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": ".devcontainer/scripts/check-features.sh",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				// "mssql.connections": [
+				// 	{
+				// 		"server": "localhost,1433",
+				// 		"database": "",
+				// 		"authenticationType": "SqlLogin",
+				// 		"user": "sa",
+				// 		"password": "P@ssw0rd",
+				// 		"emptyPasswordInput": false,
+				// 		"savePassword": true,
+				// 		"trustServerCertificate": true,
+				// 		"profileName": "local-container"
+				// 	}
+				// ]
+			},
+
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"/tmp/service-manager.vsix"
+				// "ms-python.python",
+				// "ms-dotnettools.csdevkit",
+				// "ms-mssql.mssql",
+				// "redhat.vscode-yaml",
+				// "ms-azuretools.vscode-docker",
+				// "github.vscode-github-actions"
+			]
+		}	
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

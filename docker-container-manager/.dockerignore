@@ -1,0 +1,50 @@
+# Node modules
+node_modules
+**/node_modules
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist
+build
+out
+lib
+coverage
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# VS Code & IDE
+.vscode
+.vscode-test
+.idea
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+docker-compose*.yml
+
+# Misc caches
+.cache
+.parcel-cache
+.next
+.turbo
+.vercel
+
+# Temporary files
+.vsix
+
