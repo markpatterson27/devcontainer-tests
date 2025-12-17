@@ -144,7 +144,7 @@ class ServicesProvider implements vscode.TreeDataProvider<TreeNode> {
 
     private getServiceGroups(): ServiceGroupItem[] {
         const groups = new Map<ServiceType, string>();
-        groups.set('database', 'Databases');
+        groups.set('database', 'Relational Databases');
         groups.set('cache', 'Caches');
         groups.set('other', 'Other Services');
 
@@ -199,7 +199,7 @@ class WelcomeItem extends vscode.TreeItem {
         this.contextValue = 'welcome-item';
         this.tooltip = 'Manage development services like databases and caches.\n\n' +
             'Quick Start:\n' +
-            '1. Expand a service group (Databases, Caches)\n' +
+            '1. Expand a service group (Relational Databases, Caches)\n' +
             '2. Pull image if needed (cloud icon)\n' +
             '3. Start service (play icon)\n' +
             '4. Expand service to see connection details\n' +

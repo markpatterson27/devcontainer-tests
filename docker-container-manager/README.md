@@ -4,19 +4,19 @@ A VSCode extension that makes it easy to manage development services including d
 
 ## Features
 
-- **Visual Service Management**: View services organized by type (Databases, Caches) in a dedicated sidebar
+- **Visual Service Management**: View services organized by type (Relational Databases, Caches) in a dedicated sidebar
 - **Service Details**: Expand each service to see connection details including port, username, password, and database name
 - **One-Click Operations**: Pull images, start and stop services with a single click
 - **Easy to Extend**: Simply add new services to the configuration array
 - **Supported Services**:
-  - **Databases**: SQL Server (2019), PostgreSQL (latest), MariaDB (latest)
+  - **Relational Databases**: SQL Server (2019), PostgreSQL (latest), MariaDB (latest)
   - **Caches**: Redis (latest)
 
 ## Usage
 
 1. Open the Services view from the activity bar
 2. Read the welcome message at the top of the view for quick instructions
-3. Services are grouped by type (Databases, Caches)
+3. Services are grouped by type (Relational Databases, Caches)
 4. Expand a group to see all services of that type
 5. For services not yet pulled, click the cloud download icon to pull the image
 6. Once pulled, click the play icon to start the service

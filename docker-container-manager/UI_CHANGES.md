@@ -13,7 +13,7 @@ SERVICES (Activity Bar Title)
    ├─ 👋 Welcome to Services Manager
    │  └─ Click groups below to manage services
    │
-   ├─ 📊 Databases (Expanded)
+   ├─ 📊 Relational Databases (Expanded)
    │  │
    │  ├─ ✓ SQL Server - Running
    │  │  ├─ 🔌 Port: 1433
@@ -53,7 +53,7 @@ SERVICES (Activity Bar Title)
 
 ### 3. Tree Structure
 - **Before**: Flat list of all containers
-- **After**: Grouped by type (Databases, Caches)
+- **After**: Grouped by type (Relational Databases, Caches)
 
 ### 4. Service Details
 - **Before**: Description showed "Running on port 1433"
@@ -84,7 +84,7 @@ SERVICES (Activity Bar Title)
 ## Visual Features
 
 ### Group Icons
-- **Databases**: 🗄️ Database icon
+- **Relational Databases**: 🗄️ Database icon
 - **Caches**: 💾 Server icon
 - **Other Services**: 📚 Layers icon
 
@@ -102,7 +102,7 @@ SERVICES (Activity Bar Title)
 ## User Interaction
 
 1. **View Groups**: Click the activity bar icon to see service groups
-2. **Expand Group**: Click on "Databases" or "Caches" to see services
+2. **Expand Group**: Click on "Relational Databases" or "Caches" to see services
 3. **View Details**: Click on a service name to expand and see connection details
 4. **Pull Image**: Click the cloud download icon next to "Not pulled" services
 5. **Start Service**: Click the play icon next to stopped services
