@@ -12,7 +12,7 @@ COPY ./docker-container-manager /extension
 RUN npm install && npm run compile && vsce package -o service-manager.vsix
 
 # Final Dev Container
-FROM mcr.microsoft.com/vscode/devcontainers/universal:2-focal
+FROM mcr.microsoft.com/vscode/devcontainers/ubuntu:latest
 
 # Copy the built extension from the builder stage
 COPY --from=extension-builder /extension/service-manager.vsix /tmp/
