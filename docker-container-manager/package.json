@@ -1,0 +1,98 @@
+{
+  "name": "docker-container-manager",
+  "displayName": "Services",
+  "description": "Easily manage development services including databases and caches",
+  "version": "0.0.1",
+  "publisher": "devcontainer-tests",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:dockerContainerManager"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "docker-container-manager",
+          "title": "Services",
+          "icon": "resources/services.svg"
+        }
+      ]
+    },
+    "views": {
+      "docker-container-manager": [
+        {
+          "id": "dockerContainerManager",
+          "name": "Development Services"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "dockerContainerManager.pullImage",
+        "title": "Pull Image",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "dockerContainerManager.startContainer",
+        "title": "Start Container",
+        "icon": "$(play)"
+      },
+      {
+        "command": "dockerContainerManager.stopContainer",
+        "title": "Stop Container",
+        "icon": "$(stop)"
+      },
+      {
+        "command": "dockerContainerManager.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "dockerContainerManager.refresh",
+          "when": "view == dockerContainerManager",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "dockerContainerManager.pullImage",
+          "when": "view == dockerContainerManager && viewItem == service-notpulled",
+          "group": "inline"
+        },
+        {
+          "command": "dockerContainerManager.startContainer",
+          "when": "view == dockerContainerManager && viewItem == service-stopped",
+          "group": "inline"
+        },
+        {
+          "command": "dockerContainerManager.stopContainer",
+          "when": "view == dockerContainerManager && viewItem == service-running",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
